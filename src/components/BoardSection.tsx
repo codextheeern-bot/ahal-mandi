@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 export function BoardSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const isScrollingRef = useRef(false);
 
   const scrollTo = useCallback(
     (index: number) => {
@@ -17,8 +18,12 @@ export function BoardSection() {
       if (card) {
         const scrollTarget =
           card.offsetLeft - container.offsetWidth / 2 + card.offsetWidth / 2;
+        isScrollingRef.current = true;
         container.scrollTo({ left: scrollTarget, behavior: "smooth" });
         setActiveIndex(clamped);
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 400);
       }
     },
     [],
@@ -73,6 +78,7 @@ export function BoardSection() {
         <div
           ref={scrollRef}
           onScroll={() => {
+            if (isScrollingRef.current) return;
             const container = scrollRef.current;
             if (!container) return;
             // Skip the two spacer divs (first and last children)
