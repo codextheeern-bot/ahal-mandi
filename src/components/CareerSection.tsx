@@ -1,6 +1,5 @@
 import { useState, useRef, type FormEvent } from "react";
 import { User, Phone, Link2, Send } from "lucide-react";
-import emailjs from "@emailjs/browser";
 import { Reveal } from "@/components/ui/reveal";
 
 const inputClass =
@@ -21,6 +20,7 @@ export function CareerSection() {
     const formData = new FormData(form);
 
     try {
+      const emailjs = (await import("@emailjs/browser")).default;
       await emailjs.send(
         "service_0hz5l2d",
         "template_81diss5",
