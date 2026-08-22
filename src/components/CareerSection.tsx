@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { User, Phone, Link2, Send } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import { Reveal } from "@/components/ui/reveal";
 
 const inputClass =
@@ -7,10 +8,39 @@ const inputClass =
 
 export function CareerSection() {
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSent(true);
+    setLoading(true);
+    setError("");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      await emailjs.send(
+        "service_0hz5l2d",
+        "template_81diss5",
+        {
+          from_name: formData.get("name"),
+          whatsapp: formData.get("whatsapp"),
+          cv: formData.get("cv") || "N/A",
+          about: formData.get("about") || "N/A",
+        },
+        {
+          publicKey: "t-FMg9NVx5Xt7rHV7",
+        }
+      );
+      setSent(true);
+      form.reset();
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setError("Failed to send. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -116,11 +146,17 @@ export function CareerSection() {
               placeholder="Tell us about yourself..."
               className="w-full rounded-md border border-gold/15 bg-[#101010] p-3 text-[11px] text-cream placeholder:text-[#6b6b6b] focus:border-gold/50 focus:outline-none"
             />
+            {error && (
+              <p className="text-center text-[10px] text-red-400">
+                {error}
+              </p>
+            )}
             <button
               type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-gold py-2.5 text-[10px] font-semibold tracking-[0.2em] text-black transition-all hover:brightness-110"
+              disabled={loading || sent}
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-gold py-2.5 text-[10px] font-semibold tracking-[0.2em] text-black transition-all hover:brightness-110 disabled:opacity-60"
             >
-              {sent ? "SUBMITTED" : "SUBMIT"}
+              {loading ? "SENDING..." : sent ? "SUBMITTED ✓" : "SUBMIT"}
               <Send size={11} />
             </button>
           </form>
