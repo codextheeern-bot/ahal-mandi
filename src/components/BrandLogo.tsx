@@ -13,7 +13,7 @@ export function BrandLogo({ className, compact = false }: BrandLogoProps) {
       alt="Ahal Mandi"
       className={cn(
         "brand-logo select-none object-contain",
-        compact ? "h-20 w-auto md:h-20" : "h-32 w-auto md:h-40",
+        compact ? "h-28 w-auto md:h-28" : "h-32 w-auto md:h-40",
         className,
       )}
     />
