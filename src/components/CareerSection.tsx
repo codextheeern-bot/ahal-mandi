@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { User, Phone, Link2, Send } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import { Reveal } from "@/components/ui/reveal";
@@ -10,6 +10,7 @@ export function CareerSection() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -35,6 +36,8 @@ export function CareerSection() {
       );
       setSent(true);
       form.reset();
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setSent(false), 3000);
     } catch (err) {
       console.error("EmailJS error:", err);
       setError("Failed to send. Please try again.");
