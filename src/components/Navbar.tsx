@@ -30,7 +30,7 @@ export function Navbar() {
         <a href="#top" className="flex items-center" aria-label="Ahal Mandhi home">
           <BrandLogo
             compact
-            className="navbar-brand h-16 transition-transform duration-300 hover:scale-105 md:h-14"
+            className="navbar-brand h-20 transition-transform duration-300 hover:scale-105 md:h-16"
           />
         </a>
 

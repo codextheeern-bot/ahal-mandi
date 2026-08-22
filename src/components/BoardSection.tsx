@@ -15,7 +15,9 @@ export function BoardSection() {
       // +1 to skip the left spacer div that sits before the cards
       const card = container.children[clamped + 1] as HTMLElement | undefined;
       if (card) {
-        card.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        const scrollTarget =
+          card.offsetLeft - container.offsetWidth / 2 + card.offsetWidth / 2;
+        container.scrollTo({ left: scrollTarget, behavior: "smooth" });
         setActiveIndex(clamped);
       }
     },
